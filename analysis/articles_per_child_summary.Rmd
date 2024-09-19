@@ -1,0 +1,117 @@
+---
+title: "Articles per child model summaries"
+author: "Luke Maurits"
+date: "`r Sys.Date()`"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(brms)
+
+m_null <- readRDS("m_null.rds")
+
+m_nielsen <- readRDS("m_singpred_weird.rds")
+
+m_western <- readRDS("m_singpred_western.rds")
+m_education <- readRDS("m_singpred_education.rds")
+m_industry <- readRDS("m_singpred_industry.rds")
+m_gdp <- readRDS("m_singpred_gdp.rds")
+m_democracy <- readRDS("m_singpred_democracy.rds")
+
+m_household_size <- readRDS("m_singpred_household_size.rds")
+m_urbanism <- readRDS("m_singpred_urbanism.rds")
+m_gini <- readRDS("m_singpred_gini.rds")
+m_religiosity <- readRDS("m_singpred_religiosity.rds")
+```
+
+## Single predictor models
+
+### Nielsen WEIRD model
+
+```{r echo=FALSE}
+summary(m_nielsen)
+```
+
+### WEIRD models
+
+#### Western model
+
+```{r echo=FALSE}
+summary(m_western)
+```
+
+#### Education model
+
+```{r echo=FALSE}
+summary(m_education)
+```
+
+#### Industry model
+
+```{r echo=FALSE}
+summary(m_industry)
+```
+
+#### GDP model
+
+```{r echo=FALSE}
+summary(m_gdp)
+```
+
+#### Democracy model
+
+```{r echo=FALSE}
+summary(m_democracy)
+```
+
+#### Comparisons
+
+```{r echo=FALSE}
+knitr::kable(loo_compare(m_null, m_nielsen))
+knitr::kable(loo_compare(m_null, m_western))
+knitr::kable(loo_compare(m_null, m_education))
+knitr::kable(loo_compare(m_null, m_industry))
+knitr::kable(loo_compare(m_null, m_gdp))
+knitr::kable(loo_compare(m_null, m_democracy))
+knitr::kable(loo_compare(m_western, m_education, m_industry, m_gdp, m_democracy))
+knitr::kable(model_weights(m_western, m_education, m_industry, m_gdp, m_democracy))
+```
+
+### Alternative models
+
+#### Household size model
+
+```{r echo=FALSE}
+summary(m_household_size)
+```
+
+#### Urbanism model
+
+```{r echo=FALSE}
+summary(m_urbanism)
+```
+
+#### Gini model
+
+```{r echo=FALSE}
+summary(m_gini)
+```
+
+#### Religiosity model
+
+```{r echo=FALSE}
+summary(m_religiosity)
+```
+
+#### Comparisons
+
+```{r echo=FALSE}
+knitr::kable(loo_compare(m_null, m_household_size))
+knitr::kable(loo_compare(m_null, m_urbanism))
+knitr::kable(loo_compare(m_null, m_gini))
+knitr::kable(loo_compare(m_null, m_religiosity))
+knitr::kable(loo_compare(m_household_size, m_urbanism, m_gini, m_religiosity))
+knitr::kable(model_weights(m_household_size, m_urbanism, m_gini, m_religiosity))
+```
