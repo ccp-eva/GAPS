@@ -14,13 +14,13 @@ pretty_varname <- function(varname) {
 	} else if(varname == "democracy") {
 		return("Democractic")
 	} else if(varname == "gini") {
-		return("Economically unequal")
+		return("Econ. Unequal")
 	} else if(varname == "household_size") {
-		return("Household size")
+		return("Household Size")
 	} else if(varname == "urbanism") {
 		return("Urbanized")
 	} else if(varname == "ethfrac") {
-		return("Ethnically diverse")
+		return("Ethnically Diverse")
 	} else if(varname == "religiosity") {
 		return("Religious")
 	} else {
@@ -28,7 +28,7 @@ pretty_varname <- function(varname) {
 	}
 }
 
-plot_qualifier <- function(qualifier) {
+plot_qualifier <- function(qualifier, legend=TRUE) {
 	predictors <- c("education", "industry", "gdp", "democracy",
 		"household_size", "urbanism", "gini", "religiosity", "ethfrac")
 	# Initialise model comparison table and add null model
@@ -44,12 +44,16 @@ plot_qualifier <- function(qualifier) {
 
 	if(qualifier == "group_identifier") {
 		yaxis_label <- "Probability of Group Identifier"
+		nice_title <- "(a) Group Identifier"
 	} else if(qualifier == "countries_info_given") {
 		yaxis_label <- "Probability of Country Information"
+		nice_title <- "(d) Country Information"
 	} else if(qualifier == "culture_word") {
 		yaxis_label <- 'Probability of "Culture" Reference'
+		nice_title <- '(c) "Culture" Word'
 	} else if(qualifier == "crosscultural") {
 		yaxis_label <- "Probability of Cross-Cultural Focus"
+		nice_title <- "(b) Cross-Cultural"
 	}
 
 	# Iterate through predictors,
@@ -84,22 +88,25 @@ plot_qualifier <- function(qualifier) {
 
 			# Create plot, append to plotlist
 			predictor <- ensym(predictor)
-			plot_table$`Multiple countries` <- plot_table$multi_country
+			plot_table$`Countries sampled` <- if_else(plot_table$multi_country, "Multiple", "Single")
+			plot_table$`Countries sampled` <- factor(plot_table$`Countries sampled`, c("Single", "Multiple"), ordered=TRUE)
 			p <- ggplot(plot_table) +
-				geom_line(aes(x=!!predictor, y=mean_outcome, group=`Multiple countries`, colour=`Multiple countries`), show.legend = j == length(predictors)) +
-				geom_ribbon(aes(x=!!predictor, ymin=low_outcome, ymax=high_outcome, fill=`Multiple countries`, group=`Multiple countries`), alpha=0.25, show.legend = j == length(predictors)) +
+				geom_line(aes(x=!!predictor, y=mean_outcome, group=`Countries sampled`, colour=`Countries sampled`), show.legend = legend && j == length(predictors)) +
+				geom_ribbon(aes(x=!!predictor, ymin=low_outcome, ymax=high_outcome, fill=`Countries sampled`, group=`Countries sampled`), alpha=0.25, show.legend = legend && j == length(predictors)) +
 				geom_hline(yintercept=0.5, linetype="dotted") +
 
 				ggtitle(pretty_varname(predictor)) +
-				labs(fill="Multiple\ncountries", colour="Multiple\ncountries") +
+				labs(fill="Countries\nsampled", colour="Countries\nsampled") +
 				xlab("Decile") +
 				ylab(yaxis_label) +
 
 				scale_x_continuous(breaks=1:10) +
-				scale_y_continuous(limits=c(0, 1), position=if_else(j < 5, "right", "left")) +
+				scale_y_continuous(limits=c(0, 1), position="right") +
+				scale_colour_manual(values=c("#F8766D", "#00BFC4")) +
+				scale_fill_manual(values=c("#F8766D", "#00BFC4")) +
 				theme_bw() +
-				theme(aspect.ratio = 1, legend.box.margin=unit(margin(0, 0, 0, -40)))
-			if(j != 4 & j != 5) {
+				theme(aspect.ratio = 1)
+			if(j != 9) {
 				p <- p + theme(axis.text.y=element_blank(), axis.title.y=element_blank())
 			}
 			plotlist[[plot_index]] <- p
@@ -124,7 +131,7 @@ plot_qualifier <- function(qualifier) {
 		geom_segment(aes(x=looic_2se_down, xend=looic_2se_up, y=predictor, yend=predictor), size=2, alpha=0.5) +
 		geom_segment(aes(x=looic_1se_down, xend=looic_1se_up, y=predictor, yend=predictor), size=2, alpha=0.75) +
 		geom_point(aes(x=looic, y=predictor), size=5, alpha=1.0)  +
-		ggtitle("Model comparisons") + 
+		ggtitle("Model Comparisons") +
 		xlab("LOOIC (lower better)") +
 		ylab("") +
 		theme_bw() +
@@ -132,12 +139,16 @@ plot_qualifier <- function(qualifier) {
 
 	# Make the final combined plot
 	plotlist <- c(list(p), plotlist)
-	p <- wrap_plots(plotlist, nrow=2, ncol=5)
-	ggsave(paste("../plots/final_", qualifier, "_singlepred_comparison.png", sep=""), p, width=420, height=420/2.4, units="mm")
+	p <- wrap_plots(plotlist, nrow=1, ncol=10) +
+		plot_annotation(title=nice_title, theme = theme(plot.title = element_text(size = 18)))
+	ggsave(paste("../plots/final_longer_", qualifier, "_singlepred_comparison.png", sep=""), p, width=297*2, height=0.95*(2*210/5), units="mm")
 	return(p)
 }
 
-plot_qualifier("group_identifier")
-plot_qualifier("countries_info_given")
-plot_qualifier("culture_word")
-plot_qualifier("crosscultural")
+p_a <- plot_qualifier("group_identifier", legend=TRUE)
+p_b <- plot_qualifier("countries_info_given", legend=FALSE)
+p_c <- plot_qualifier("culture_word", legend=FALSE)
+p_d <- plot_qualifier("crosscultural", legend=FALSE)
+megaplotlist <- list(p_a, p_b, p_c, p_d, p_d)
+megaplot <- wrap_plots(megaplotlist, nrow=5)
+ggsave(paste("../plots/final_longer_singlepred_mega_comparison.png", sep=""), megaplot, width=297*2, height=2*210, units="mm")
