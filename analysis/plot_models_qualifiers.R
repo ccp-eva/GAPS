@@ -28,7 +28,7 @@ pretty_varname <- function(varname) {
 	}
 }
 
-plot_qualifier <- function(qualifier, legend=TRUE) {
+plot_qualifier <- function(qualifier, legend=TRUE, xticks_hack=FALSE) {
 	predictors <- c("education", "industry", "gdp", "democracy",
 		"household_size", "urbanism", "gini", "religiosity", "ethfrac")
 	# Initialise model comparison table and add null model
@@ -136,6 +136,9 @@ plot_qualifier <- function(qualifier, legend=TRUE) {
 		ylab("") +
 		theme_bw() +
 		theme(aspect.ratio = 1)
+	if(xticks_hack) {
+		p <- p + scale_x_continuous(breaks=c(3100, 3200, 3300))
+	}
 
 	# Make the final combined plot
 	plotlist <- c(list(p), plotlist)
@@ -146,9 +149,9 @@ plot_qualifier <- function(qualifier, legend=TRUE) {
 }
 
 p_a <- plot_qualifier("group_identifier", legend=TRUE)
-p_b <- plot_qualifier("countries_info_given", legend=FALSE)
-p_c <- plot_qualifier("culture_word", legend=FALSE)
-p_d <- plot_qualifier("crosscultural", legend=FALSE)
+p_b <- plot_qualifier("countries_info_given", legend=TRUE)
+p_c <- plot_qualifier("culture_word", legend=TRUE, xticks_hack=TRUE)
+p_d <- plot_qualifier("crosscultural", legend=TRUE)
 megaplotlist <- list(p_a, p_b, p_c, p_d, p_d)
 megaplot <- wrap_plots(megaplotlist, nrow=5)
 ggsave(paste("../plots/final_longer_singlepred_mega_comparison.png", sep=""), megaplot, width=297*2, height=2*210, units="mm")

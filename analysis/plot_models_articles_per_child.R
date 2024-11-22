@@ -127,3 +127,30 @@ p <- ggplot(model_comparison_table) +
 plotlist <- c(list(p), plotlist)
 p <- wrap_plots(plotlist, nrow=2, ncol=5)
 ggsave("../plots/final_singlepred_comparison.png", p, width=420, height=420/2.4, units="mm")
+
+
+		p <- ggplot(nd) +
+			geom_hline(yintercept=fair_target, linetype="longdash", alpha=0.5) +
+			geom_line(aes(x=!!predictor, y=pred_mean)) +
+			geom_ribbon(aes(x=!!predictor, ymin=pred_lower, ymax=pred_upper), alpha=0.25) +
+			geom_jitter(aes(x=!!predictor, y=log_articles_per_child, colour=Country, alpha=`Article count`), width=0.1, data=d, show.legend = j == length(predictors)) +
+			ylab("Articles per million children") +
+			ggtitle(pretty_varname(predictor)) +
+			xlab("Decile") +
+			scale_x_continuous(breaks=1:10) +
+			scale_y_continuous(breaks=log(1e-6*c(0.001, 0.01, 0.1, 1, 10, 100, 1000)),
+					   labels=c("0.001", "0.01", "0.1", "1", "10", "100", "1000"),
+					   limits=c(-24, -6.5), position=if_else(j < 5, "right", "left")) +
+			scale_alpha_discrete(range=c(0.3, 1.0)) +
+			theme_bw() +
+			theme(aspect.ratio = 1, legend.box.margin=margin(0, 0, 0, -50))
+
+p <- ggplot(d, aes(x=education, y=1e6*exp(log_articles_per_child), colour=WEIRD)) +
+	geom_point() +
+#	geom_text_repel(aes(label=country), max.overlaps = 30) +
+	scale_x_continuous(breaks=1:10) +
+	xlab("Education decile") +
+	ylim(c(-0.1, 70)) +
+	scale_y_continuous(breaks=seq(0,70,1), minor_breaks=seq(0,70,0.1), limits=c(-0.1, 70)) +
+	ylab("Articles per million children")
+ggsave("../plots/extra_long_no_labels.png", p, width=420, height=420*25, units="mm", limitsize=FALSE)
