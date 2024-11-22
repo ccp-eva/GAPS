@@ -62,11 +62,12 @@ for(j in 1:length(predictors)) {
 
 		# Build plot table
 		plot_table <- tibble(value=numeric(), multi_country=logical(), mean_outcome=numeric(), low_outcome=numeric(), high_outcome=numeric())
-		nd <- expand_grid(foo=1:10, multi_country=c(F, T), exposure=10)
+		nd <- expand_grid(foo=1:10, multi_country=c(-0.5, 0.5), exposure=10)
 		names(nd) <- c(predictor, "multi_country", "exposure")
 		preds <- posterior_linpred(m, newdata=nd, transform=TRUE, re_formula=NA)
+		nd$multi_country = nd$multi_country > 0
 		for(k in 1:nrow(nd)) {
-			plot_table <- add_row(plot_table, value=nd[[predictor]][k], multi_country=nd$multi_country[k], mean_outcome=mean(preds[,k]), low_outcome=quantile(preds[,k], p=0.025), high_outcome=quantile(preds[,k], p=0.975))
+			plot_table <- add_row(plot_table, value=nd[[predictor]][k], multi_country=nd$multi_country[k], mean_outcome=median(preds[,k]), low_outcome=quantile(preds[,k], p=0.025), high_outcome=quantile(preds[,k], p=0.975))
 		}
 		foonames <- colnames(plot_table)
 		foonames[1] <- predictor
@@ -91,7 +92,7 @@ for(j in 1:length(predictors)) {
 			scale_colour_manual(values=c("#F8766D", "#00BFC4")) +
 			scale_fill_manual(values=c("#F8766D", "#00BFC4")) +
 			theme_bw() +
-			coord_cartesian(ylim = c(0, 300)) +
+			coord_cartesian(ylim = c(0, 150)) +
 			theme(aspect.ratio = 1)
 		if(j != 9) {
 			p <- p + theme(axis.text.y=element_blank(), axis.title.y=element_blank())
@@ -118,6 +119,7 @@ p <- ggplot(model_comparison_table) +
 	geom_segment(aes(x=looic_2se_down, xend=looic_2se_up, y=predictor, yend=predictor), size=2, alpha=0.5) +
 	geom_segment(aes(x=looic_1se_down, xend=looic_1se_up, y=predictor, yend=predictor), size=2, alpha=0.75) +
 	geom_point(aes(x=looic, y=predictor), size=5, alpha=1.0)  +
+	scale_x_continuous(breaks=c(19200, 19400, 19600)) +
 	ggtitle("Model Comparisons") +
 	xlab("LOOIC (lower better)") +
 	ylab("") +
