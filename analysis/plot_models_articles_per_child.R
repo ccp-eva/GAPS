@@ -144,13 +144,3 @@ ggsave("../plots/final_singlepred_comparison.png", p, width=420, height=420/2.4,
 			scale_alpha_discrete(range=c(0.3, 1.0)) +
 			theme_bw() +
 			theme(aspect.ratio = 1, legend.box.margin=margin(0, 0, 0, -50))
-
-p <- ggplot(d, aes(x=education, y=1e6*exp(log_articles_per_child), colour=WEIRD)) +
-	geom_point() +
-#	geom_text_repel(aes(label=country), max.overlaps = 30) +
-	scale_x_continuous(breaks=1:10) +
-	xlab("Education decile") +
-	ylim(c(-0.1, 70)) +
-	scale_y_continuous(breaks=seq(0,70,1), minor_breaks=seq(0,70,0.1), limits=c(-0.1, 70)) +
-	ylab("Articles per million children")
-ggsave("../plots/extra_long_no_labels.png", p, width=420, height=420*25, units="mm", limitsize=FALSE)
