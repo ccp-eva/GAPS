@@ -147,11 +147,3 @@ plot_qualifier <- function(qualifier, legend=TRUE, xticks_hack=FALSE) {
 	ggsave(paste("../plots/final_longer_", qualifier, "_singlepred_comparison.png", sep=""), p, width=297*2, height=0.95*(2*210/5), units="mm")
 	return(p)
 }
-
-p_a <- plot_qualifier("group_identifier", legend=TRUE)
-p_b <- plot_qualifier("countries_info_given", legend=TRUE)
-p_c <- plot_qualifier("culture_word", legend=TRUE, xticks_hack=TRUE)
-p_d <- plot_qualifier("crosscultural", legend=TRUE)
-megaplotlist <- list(p_a, p_b, p_c, p_d, p_d)
-megaplot <- wrap_plots(megaplotlist, nrow=5)
-ggsave(paste("../plots/final_longer_singlepred_mega_comparison.png", sep=""), megaplot, width=297*2, height=2*210, units="mm")
