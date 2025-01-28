@@ -24,6 +24,7 @@ m_household_size <- readRDS("m_singpred_household_size.rds")
 m_urbanism <- readRDS("m_singpred_urbanism.rds")
 m_gini <- readRDS("m_singpred_gini.rds")
 m_religiosity <- readRDS("m_singpred_religiosity.rds")
+m_ethfrac <- readRDS("m_singpred_ethfrac.rds")
 ```
 
 ## Single predictor models
@@ -32,6 +33,22 @@ m_religiosity <- readRDS("m_singpred_religiosity.rds")
 
 ```{r echo=FALSE}
 summary(m_nielsen)
+```
+
+WEIRD vs non-WEIRD contrast:
+
+```{r}
+x <- as_draws_df(m_nielsen)
+contrast <- x$b_weirdTRUE - x$b_weirdFALSE
+mean(contrast)
+quantile(contrast, p=c(0.025, 0.975))
+```
+
+Posterior predictions:
+
+```{r}
+median(1 / exp(x$b_weirdTRUE))
+median(1 / exp(x$b_weirdFALSE))
 ```
 
 ### WEIRD models
@@ -105,6 +122,12 @@ summary(m_gini)
 summary(m_religiosity)
 ```
 
+#### Ethnic diversity model
+
+```{r echo=FALSE}
+summary(m_ethfrac)
+```
+
 #### Comparisons
 
 ```{r echo=FALSE}
@@ -112,6 +135,7 @@ knitr::kable(loo_compare(m_null, m_household_size))
 knitr::kable(loo_compare(m_null, m_urbanism))
 knitr::kable(loo_compare(m_null, m_gini))
 knitr::kable(loo_compare(m_null, m_religiosity))
-knitr::kable(loo_compare(m_household_size, m_urbanism, m_gini, m_religiosity))
-knitr::kable(model_weights(m_household_size, m_urbanism, m_gini, m_religiosity))
+knitr::kable(loo_compare(m_null, m_ethfrac))
+knitr::kable(loo_compare(m_household_size, m_urbanism, m_gini, m_religiosity, m_ethfrac))
+knitr::kable(model_weights(m_household_size, m_urbanism, m_gini, m_religiosity, m_ethfrac))
 ```
