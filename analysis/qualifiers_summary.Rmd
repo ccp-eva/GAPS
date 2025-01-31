@@ -1,0 +1,184 @@
+---
+title: "Qualifier usage model summaries"
+author: "Luke Maurits"
+date: "`r Sys.Date()`"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(brms)
+```
+## Null models
+
+```{r, include=FALSE}
+
+m_group_null <- readRDS("m_group_identifier_null.rds") %>% add_criterion("loo")
+m_culture_word_null <- readRDS("m_culture_word_null.rds") %>% add_criterion("loo")
+m_crosscultural_null <- readRDS("m_crosscultural_null.rds") %>% add_criterion("loo")
+m_countries_info_given_null <- readRDS("m_countries_info_given_null.rds") %>% add_criterion("loo")
+```
+
+### Group identifier
+
+```{r echo=FALSE}
+fixef(m_group_null)
+```
+
+### Culture word
+
+```{r echo=FALSE}
+fixef(m_culture_word_null)
+```
+
+### Cross-cultural
+
+```{r echo=FALSE}
+fixef(m_crosscultural_null)
+```
+
+### Countries info given
+
+```{r echo=FALSE}
+fixef(m_countries_info_given_null)
+```
+
+## Comparisons
+
+### Group identifier
+
+```{r echo=FALSE}
+m_group_democracy <- readRDS("m_group_identifier_singpred_democracy.rds") %>% add_criterion("loo")
+m_group_education <- readRDS("m_group_identifier_singpred_education.rds") %>% add_criterion("loo")
+m_group_industry <- readRDS("m_group_identifier_singpred_industry.rds") %>% add_criterion("loo")
+m_group_gdp <- readRDS("m_group_identifier_singpred_gdp.rds") %>% add_criterion("loo")
+m_group_gini <- readRDS("m_group_identifier_singpred_gini.rds") %>% add_criterion("loo")
+m_group_ethfrac <- readRDS("m_group_identifier_singpred_ethfrac.rds") %>% add_criterion("loo")
+m_group_household_size <- readRDS("m_group_identifier_singpred_household_size.rds") %>% add_criterion("loo")
+m_group_religiosity <- readRDS("m_group_identifier_singpred_religiosity.rds") %>% add_criterion("loo")
+m_group_urbanism <- readRDS("m_group_identifier_singpred_urbanism.rds") %>% add_criterion("loo")
+
+fixef(m_group_democracy)
+fixef(m_group_education)
+fixef(m_group_industry)
+fixef(m_group_gdp)
+fixef(m_group_gini)
+fixef(m_group_ethfrac)
+fixef(m_group_household_size)
+fixef(m_group_religiosity)
+fixef(m_group_urbanism)
+
+knitr::kable(loo_compare(m_group_null, m_group_democracy), digits=2)
+knitr::kable(loo_compare(m_group_null, m_group_education), digits=2)
+knitr::kable(loo_compare(m_group_null, m_group_industry), digits=2)
+knitr::kable(loo_compare(m_group_null, m_group_gdp), digits=2)
+knitr::kable(loo_compare(m_group_null, m_group_gini), digits=2)
+knitr::kable(loo_compare(m_group_null, m_group_ethfrac), digits=2)
+knitr::kable(loo_compare(m_group_null, m_group_household_size), digits=2)
+knitr::kable(loo_compare(m_group_null, m_group_religiosity), digits=2)
+knitr::kable(loo_compare(m_group_null, m_group_urbanism), digits=2)
+```
+
+### Culture word
+
+```{r echo=FALSE}
+m_culture_word_democracy <- readRDS("m_culture_word_singpred_democracy.rds") %>% add_criterion("loo")
+m_culture_word_education <- readRDS("m_culture_word_singpred_education.rds") %>% add_criterion("loo")
+m_culture_word_industry <- readRDS("m_culture_word_singpred_industry.rds") %>% add_criterion("loo")
+m_culture_word_gdp <- readRDS("m_culture_word_singpred_gdp.rds") %>% add_criterion("loo")
+m_culture_word_gini <- readRDS("m_culture_word_singpred_gini.rds") %>% add_criterion("loo")
+m_culture_word_ethfrac <- readRDS("m_culture_word_singpred_ethfrac.rds") %>% add_criterion("loo")
+m_culture_word_household_size <- readRDS("m_culture_word_singpred_household_size.rds") %>% add_criterion("loo")
+m_culture_word_religiosity <- readRDS("m_culture_word_singpred_religiosity.rds") %>% add_criterion("loo")
+m_culture_word_urbanism <- readRDS("m_culture_word_singpred_urbanism.rds") %>% add_criterion("loo")
+
+fixef(m_culture_word_democracy)
+fixef(m_culture_word_education)
+fixef(m_culture_word_industry)
+fixef(m_culture_word_gdp)
+fixef(m_culture_word_gini)
+fixef(m_culture_word_ethfrac)
+fixef(m_culture_word_household_size)
+fixef(m_culture_word_religiosity)
+fixef(m_culture_word_urbanism)
+
+knitr::kable(loo_compare(m_culture_word_null, m_culture_word_democracy), digits=2)
+knitr::kable(loo_compare(m_culture_word_null, m_culture_word_education), digits=2)
+knitr::kable(loo_compare(m_culture_word_null, m_culture_word_industry), digits=2)
+knitr::kable(loo_compare(m_culture_word_null, m_culture_word_gdp), digits=2)
+knitr::kable(loo_compare(m_culture_word_null, m_culture_word_gini), digits=2)
+knitr::kable(loo_compare(m_culture_word_null, m_culture_word_ethfrac), digits=2)
+knitr::kable(loo_compare(m_culture_word_null, m_culture_word_household_size), digits=2)
+knitr::kable(loo_compare(m_culture_word_null, m_culture_word_religiosity), digits=2)
+knitr::kable(loo_compare(m_culture_word_null, m_culture_word_urbanism), digits=2)
+```
+
+### Cross-cultural
+
+```{r echo=FALSE}
+m_crosscultural_democracy <- readRDS("m_crosscultural_singpred_democracy.rds") %>% add_criterion("loo")
+m_crosscultural_education <- readRDS("m_crosscultural_singpred_education.rds") %>% add_criterion("loo")
+m_crosscultural_industry <- readRDS("m_crosscultural_singpred_industry.rds") %>% add_criterion("loo")
+m_crosscultural_gdp <- readRDS("m_crosscultural_singpred_gdp.rds") %>% add_criterion("loo")
+m_crosscultural_gini <- readRDS("m_crosscultural_singpred_gini.rds") %>% add_criterion("loo")
+m_crosscultural_ethfrac <- readRDS("m_crosscultural_singpred_ethfrac.rds") %>% add_criterion("loo")
+m_crosscultural_household_size <- readRDS("m_crosscultural_singpred_household_size.rds") %>% add_criterion("loo")
+m_crosscultural_religiosity <- readRDS("m_crosscultural_singpred_religiosity.rds") %>% add_criterion("loo")
+m_crosscultural_urbanism <- readRDS("m_crosscultural_singpred_urbanism.rds") %>% add_criterion("loo")
+
+fixef(m_crosscultural_democracy)
+fixef(m_crosscultural_education)
+fixef(m_crosscultural_industry)
+fixef(m_crosscultural_gdp)
+fixef(m_crosscultural_gini)
+fixef(m_crosscultural_ethfrac)
+fixef(m_crosscultural_household_size)
+fixef(m_crosscultural_religiosity)
+fixef(m_crosscultural_urbanism)
+
+knitr::kable(loo_compare(m_crosscultural_null, m_crosscultural_democracy), digits=2)
+knitr::kable(loo_compare(m_crosscultural_null, m_crosscultural_education), digits=2)
+knitr::kable(loo_compare(m_crosscultural_null, m_crosscultural_industry), digits=2)
+knitr::kable(loo_compare(m_crosscultural_null, m_crosscultural_gdp), digits=2)
+knitr::kable(loo_compare(m_crosscultural_null, m_crosscultural_gini), digits=2)
+knitr::kable(loo_compare(m_crosscultural_null, m_crosscultural_ethfrac), digits=2)
+knitr::kable(loo_compare(m_crosscultural_null, m_crosscultural_household_size), digits=2)
+knitr::kable(loo_compare(m_crosscultural_null, m_crosscultural_religiosity), digits=2)
+knitr::kable(loo_compare(m_crosscultural_null, m_crosscultural_urbanism), digits=2)
+```
+
+### Countries info given
+
+```{r echo=FALSE}
+m_countries_info_given_democracy <- readRDS("m_countries_info_given_singpred_democracy.rds") %>% add_criterion("loo")
+m_countries_info_given_education <- readRDS("m_countries_info_given_singpred_education.rds") %>% add_criterion("loo")
+m_countries_info_given_industry <- readRDS("m_countries_info_given_singpred_industry.rds") %>% add_criterion("loo")
+m_countries_info_given_gdp <- readRDS("m_countries_info_given_singpred_gdp.rds") %>% add_criterion("loo")
+m_countries_info_given_gini <- readRDS("m_countries_info_given_singpred_gini.rds") %>% add_criterion("loo")
+m_countries_info_given_ethfrac <- readRDS("m_countries_info_given_singpred_ethfrac.rds") %>% add_criterion("loo")
+m_countries_info_given_household_size <- readRDS("m_countries_info_given_singpred_household_size.rds") %>% add_criterion("loo")
+m_countries_info_given_religiosity <- readRDS("m_countries_info_given_singpred_religiosity.rds") %>% add_criterion("loo")
+m_countries_info_given_urbanism <- readRDS("m_countries_info_given_singpred_urbanism.rds") %>% add_criterion("loo")
+
+fixef(m_countries_info_given_democracy)
+fixef(m_countries_info_given_education)
+fixef(m_countries_info_given_industry)
+fixef(m_countries_info_given_gdp)
+fixef(m_countries_info_given_gini)
+fixef(m_countries_info_given_ethfrac)
+fixef(m_countries_info_given_household_size)
+fixef(m_countries_info_given_religiosity)
+fixef(m_countries_info_given_urbanism)
+
+knitr::kable(loo_compare(m_countries_info_given_null, m_countries_info_given_democracy), digits=2)
+knitr::kable(loo_compare(m_countries_info_given_null, m_countries_info_given_education), digits=2)
+knitr::kable(loo_compare(m_countries_info_given_null, m_countries_info_given_industry), digits=2)
+knitr::kable(loo_compare(m_countries_info_given_null, m_countries_info_given_gdp), digits=2)
+knitr::kable(loo_compare(m_countries_info_given_null, m_countries_info_given_gini), digits=2)
+knitr::kable(loo_compare(m_countries_info_given_null, m_countries_info_given_ethfrac), digits=2)
+knitr::kable(loo_compare(m_countries_info_given_null, m_countries_info_given_household_size), digits=2)
+knitr::kable(loo_compare(m_countries_info_given_null, m_countries_info_given_religiosity), digits=2)
+knitr::kable(loo_compare(m_countries_info_given_null, m_countries_info_given_urbanism), digits=2)
+```
+

@@ -1,0 +1,123 @@
+---
+title: "Citation model summaries"
+author: "Luke Maurits"
+date: "`r Sys.Date()`"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(brms)
+library(matrixStats)
+
+m_null <- readRDS("m_citations_null.rds") %>% add_criterion("loo")
+m_education <- readRDS("m_citations_singpred_education_shape.rds") %>% add_criterion("loo")
+m_industry <- readRDS("m_citations_singpred_industry_shape.rds") %>% add_criterion("loo")
+m_gdp <- readRDS("m_citations_singpred_gdp_shape.rds") %>% add_criterion("loo")
+m_democracy <- readRDS("m_citations_singpred_democracy_shape.rds") %>% add_criterion("loo")
+m_household_size <- readRDS("m_citations_singpred_household_size_shape.rds") %>% add_criterion("loo")
+m_urbanism <- readRDS("m_citations_singpred_urbanism_shape.rds") %>% add_criterion("loo")
+m_gini <- readRDS("m_citations_singpred_gini_shape.rds") %>% add_criterion("loo")
+m_religiosity <- readRDS("m_citations_singpred_religiosity_shape.rds") %>% add_criterion("loo")
+m_ethfrac <- readRDS("m_citations_singpred_ethfrac_shape.rds") %>% add_criterion("loo")
+```
+
+## Null model
+```{r}
+fixef(m_null)
+```
+
+## Single predictor models
+
+```{r}
+pred_table <- function(m, varname) {
+	nd <- expand_grid(x=1:10, multi_country=0.5, exposure=10)
+	colnames(nd) <- c(varname, "multi_country", "exposure")
+	true_preds <- posterior_epred(m, newdata=nd, re_formula=NA)
+	nd$multi_country <- -0.5
+	false_preds <- posterior_epred(m, newdata=nd, re_formula=NA)
+	contrast <- true_preds - false_preds
+	nd$diff_posterior_mean <- colMeans(contrast)
+	nd$diff_ci_lower <- colQuantiles(contrast, probs=0.025)
+	nd$diff_ci_upper <- colQuantiles(contrast, probs=0.975)
+	return(select(nd, -multi_country, -exposure))
+}
+```
+
+### Education model
+
+```{r echo=FALSE}
+fixef(m_education)
+pred_table(m_education, "education")
+```
+
+### Industry model
+
+```{r echo=FALSE}
+fixef(m_industry)
+pred_table(m_industry, "industry")
+```
+
+### GDP model
+
+```{r echo=FALSE}
+fixef(m_gdp)
+pred_table(m_gdp, "gdp")
+```
+
+### Democracy model
+
+```{r echo=FALSE}
+fixef(m_democracy)
+pred_table(m_democracy, "democracy")
+```
+
+### Household size model
+
+```{r echo=FALSE}
+fixef(m_household_size)
+pred_table(m_household_size, "household_size")
+```
+
+### Urbanism model
+
+```{r echo=FALSE}
+fixef(m_urbanism)
+pred_table(m_urbanism, "urbanism")
+```
+
+### GINI model
+
+```{r echo=FALSE}
+fixef(m_gini)
+pred_table(m_gini, "gini")
+```
+
+### Religiosity model
+
+```{r echo=FALSE}
+fixef(m_religiosity)
+pred_table(m_religiosity, "religiosity")
+```
+
+### Ethnic diversity model
+
+```{r echo=FALSE}
+fixef(m_ethfrac)
+pred_table(m_ethfrac, "ethfrac")
+```
+
+### Comparisons
+
+```{r echo=FALSE}
+knitr::kable(loo_compare(m_null, m_democracy), digits=2)
+knitr::kable(loo_compare(m_null, m_education), digits=2)
+knitr::kable(loo_compare(m_null, m_industry), digits=2)
+knitr::kable(loo_compare(m_null, m_gdp), digits=2)
+knitr::kable(loo_compare(m_null, m_gini), digits=2)
+knitr::kable(loo_compare(m_null, m_ethfrac), digits=2)
+knitr::kable(loo_compare(m_null, m_household_size), digits=2)
+knitr::kable(loo_compare(m_null, m_religiosity), digits=2)
+knitr::kable(loo_compare(m_null, m_urbanism), digits=2)
+```
