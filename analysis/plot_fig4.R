@@ -44,14 +44,15 @@ ccp_colours = rev(c("#006c66", "#c6d325", "#00b1ea", "#29485d"))
 
 plot_t <- tibble(predictor=character(), decile=integer(),
 		 articles=numeric())
-for(j in 1:length(predictors)) {
-	predictor <- predictors[j]
-	d_sub <- d %>%
-		group_by_at(predictor) %>%
-		summarise(articles=1e6*mean(articles_per_child))
-	colnames(d_sub) <- c("decile", "articles")
-	d_sub$predictor <- pretty_varname(predictor)
-	plot_t <- add_row(plot_t, d_sub)
+for(i in 1:length(predictors)) {
+	predictor <- predictors[i]
+	m <- read_rds(paste("m_singpred_", predictor, ".rds", sep=""))
+	nd <- tibble(foo=1:10)
+	colnames(nd) <- predictor
+	d_pred <- tibble(predictor=pretty_varname(predictor),
+			 decile=1:10,
+	                 articles=1e6*colMeans(exp(posterior_epred(m, newdata=nd, re_formula=NA))))
+	plot_t <- add_row(plot_t, d_pred)
 }
 plot_t$predictor <- factor(plot_t$predictor, ranked_predictors, ordered=TRUE)
 fig4a <- ggplot(plot_t) +
@@ -62,7 +63,7 @@ fig4a <- ggplot(plot_t) +
 	scale_colour_manual(values=ccp_colours) +
 	scale_x_continuous(breaks=1:10) +
 	guides(colour="none") +
-	scale_size_area(max_size = 15, breaks = c(1, 5, 10, 15)) +
+	scale_size_area(max_size = 15, breaks = 1:5) +
 	theme_bw()
 
 plot_t <- tibble(predictor=character(), decile=integer(),
@@ -92,7 +93,7 @@ fig4b <-  plot_t %>%
 		     names_to="Qualifier",
 		     values_to="proportion") %>%
 	ggplot() +
-	geom_line(aes(x=decile, y=proportion, colour=predictor)) +
+	geom_line(aes(x=decile, y=proportion, colour=predictor), linewidth=1.5) +
 	scale_colour_manual(values=rev(ccp_colours)) +
 	scale_x_continuous(breaks=1:10) +
 	labs(colour="Country-level\nCultural Metric") +
