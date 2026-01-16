@@ -67,12 +67,12 @@ fig4a <- ggplot(plot_t) +
 	theme_bw()
 
 plot_t <- tibble(predictor=character(), decile=integer(),
-		 `Group identifier`=numeric(),
-		 `Cross-cultural`=numeric(),
-		 `Culture word`=numeric(),
-		 `Country information`=numeric())
+		 `Group Identifier`=numeric(),
+		 `Cross-Cultural`=numeric(),
+		 `\"Culture\" word`=numeric(),
+		 `Country Information`=numeric())
 qualifiers <- c("group_identifier", "crosscultural", "culture_word", "countries_info_given")
-pretty_qualifiers <- c("Group identifier", "Cross-cultural", "Culture word", "Country information")
+pretty_qualifiers <- c("Group Identifier", "Cross-Cultural", "\"Culture\" word", "Country Information")
 for(i in 1:length(predictors)) {
 	predictor <- predictors[i]
 	d_pred <- tibble(predictor=pretty_varname(predictor),
@@ -89,7 +89,7 @@ for(i in 1:length(predictors)) {
 }
 plot_t$predictor <- factor(plot_t$predictor, rev(ranked_predictors), ordered=TRUE)
 fig4b <-  plot_t %>%
-	pivot_longer(cols= c("Group identifier", "Cross-cultural", "Culture word", "Country information"),
+	pivot_longer(cols= c("Group Identifier", "Cross-Cultural", "\"Culture\" word", "Country Information"),
 		     names_to="Qualifier",
 		     values_to="proportion") %>%
 	ggplot() +
@@ -100,7 +100,9 @@ fig4b <-  plot_t %>%
 	xlab("Decile") +
 	ylab("Proportion of papers") +
 	facet_wrap(~Qualifier) +
-	theme_bw()
+	theme_bw() +
+	theme(strip.background =element_rect(fill="white")) +
+	theme(strip.text = element_text(colour = "black"))
 
 plotlist <- list(fig4a, fig4b)
 fig4 <- wrap_plots(plotlist, nrow=1, ncol=2)
