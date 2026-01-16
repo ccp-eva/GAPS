@@ -6,11 +6,14 @@ d <- read_csv("../data/articles_per_child.csv")
 
 fit_and_save_single_predictor_model <- function(d, predictor) {
   if(predictor %in% c("western", "weird")) {
-	  form <- paste("log_articles_per_child ~ 0 +", predictor)
+    form <- paste("log_articles_per_child ~ 0 +", predictor)
+    prior <- prior(normal(-16.0, 2.5), class="b")
   } else {
     form <- paste("log_articles_per_child ~ mo(", predictor, ")", sep="")
+    prior <- prior(normal(-16.0, 2.5), class="Intercept") +
+             prior(normal(0, 0.5), class="b")
   }
-  m <- brm(form, data=d, cores=4, save_pars = save_pars(all = TRUE))
+  m <- brm(form, prior=prior, data=d, cores=4, save_pars = save_pars(all = TRUE))
   m <- m %>% add_criterion("loo", moment_match=TRUE)
   filename <- paste("m_singpred_", predictor, ".rds", sep="")
   saveRDS(m, filename)
@@ -19,6 +22,7 @@ fit_and_save_single_predictor_model <- function(d, predictor) {
 
 # Null model
 m_null <- brm(log_articles_per_child ~ 1,
+          prior=prior(normal(-16.0, 2.5), class="Intercept"),
 	  data=d, cores=4) %>%
           add_criterion("loo")
 saveRDS(m_null, "m_null.rds")
