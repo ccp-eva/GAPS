@@ -86,6 +86,8 @@ summary(m_democracy)
 #### Comparisons
 
 ```{r echo=FALSE}
+loo(m_null)
+loo(m_nielsen)
 knitr::kable(loo_compare(m_null, m_nielsen))
 knitr::kable(loo_compare(m_null, m_western))
 knitr::kable(loo_compare(m_null, m_education))

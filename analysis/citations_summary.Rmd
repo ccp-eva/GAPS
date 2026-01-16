@@ -43,12 +43,25 @@ pred_table <- function(m, varname) {
 	nd$diff_ci_upper <- colQuantiles(contrast, probs=0.975)
 	return(select(nd, -multi_country, -exposure))
 }
+
+micro_summary <- function(x, cond, var) {
+	a <- mean(x)
+	b <- quantile(x, p=0.025)
+	c <- quantile(x, p=0.975)
+	return(paste(str_pad(paste(cond, var), 24, "right"), round(a, 4), round(b, 4), round(c, 4)))
+}
+
 ```
 
 ### Education model
 
 ```{r echo=FALSE}
 fixef(m_education)
+x <- as_draws_df(m_education)
+multi_country_effect <- as_vector(x[,5]) + 0.5*as_vector(x[,6])
+mono_country_effect <- as_vector(x[,5]) - 0.5*as_vector(x[,6])
+micro_summary(multi_country_effect, "multi-country effect of", "education")
+micro_summary(mono_country_effect, "mono-country effect of", "education")
 pred_table(m_education, "education")
 ```
 
@@ -56,6 +69,11 @@ pred_table(m_education, "education")
 
 ```{r echo=FALSE}
 fixef(m_industry)
+x <- as_draws_df(m_industry)
+multi_country_effect <- as_vector(x[,5]) + 0.5*as_vector(x[,6])
+mono_country_effect <- as_vector(x[,5]) - 0.5*as_vector(x[,6])
+micro_summary(multi_country_effect, "multi-country effect of", "industry")
+micro_summary(mono_country_effect, "mono-country effect of", "industry")
 pred_table(m_industry, "industry")
 ```
 
@@ -63,6 +81,11 @@ pred_table(m_industry, "industry")
 
 ```{r echo=FALSE}
 fixef(m_gdp)
+x <- as_draws_df(m_gdp)
+multi_country_effect <- as_vector(x[,5]) + 0.5*as_vector(x[,6])
+mono_country_effect <- as_vector(x[,5]) - 0.5*as_vector(x[,6])
+micro_summary(multi_country_effect, "multi-country effect of", "gdp")
+micro_summary(mono_country_effect, "mono-country effect of", "gdp")
 pred_table(m_gdp, "gdp")
 ```
 
@@ -70,6 +93,11 @@ pred_table(m_gdp, "gdp")
 
 ```{r echo=FALSE}
 fixef(m_democracy)
+x <- as_draws_df(m_democracy)
+multi_country_effect <- as_vector(x[,5]) + 0.5*as_vector(x[,6])
+mono_country_effect <- as_vector(x[,5]) - 0.5*as_vector(x[,6])
+micro_summary(multi_country_effect, "multi-country effect of", "democracy")
+micro_summary(mono_country_effect, "mono-country effect of", "democracy")
 pred_table(m_democracy, "democracy")
 ```
 
@@ -77,6 +105,11 @@ pred_table(m_democracy, "democracy")
 
 ```{r echo=FALSE}
 fixef(m_household_size)
+x <- as_draws_df(m_household_size)
+multi_country_effect <- as_vector(x[,5]) + 0.5*as_vector(x[,6])
+mono_country_effect <- as_vector(x[,5]) - 0.5*as_vector(x[,6])
+micro_summary(multi_country_effect, "multi-country effect of", "household_size")
+micro_summary(mono_country_effect, "mono-country effect of", "household_size")
 pred_table(m_household_size, "household_size")
 ```
 
@@ -84,6 +117,11 @@ pred_table(m_household_size, "household_size")
 
 ```{r echo=FALSE}
 fixef(m_urbanism)
+x <- as_draws_df(m_urbanism)
+multi_country_effect <- as_vector(x[,5]) + 0.5*as_vector(x[,6])
+mono_country_effect <- as_vector(x[,5]) - 0.5*as_vector(x[,6])
+micro_summary(multi_country_effect, "multi-country effect of", "urbanism")
+micro_summary(mono_country_effect, "mono-country effect of", "urbanism")
 pred_table(m_urbanism, "urbanism")
 ```
 
@@ -91,6 +129,11 @@ pred_table(m_urbanism, "urbanism")
 
 ```{r echo=FALSE}
 fixef(m_gini)
+x <- as_draws_df(m_gini)
+multi_country_effect <- as_vector(x[,5]) + 0.5*as_vector(x[,6])
+mono_country_effect <- as_vector(x[,5]) - 0.5*as_vector(x[,6])
+micro_summary(multi_country_effect, "multi-country effect of", "gini")
+micro_summary(mono_country_effect, "mono-country effect of", "gini")
 pred_table(m_gini, "gini")
 ```
 
@@ -98,6 +141,11 @@ pred_table(m_gini, "gini")
 
 ```{r echo=FALSE}
 fixef(m_religiosity)
+x <- as_draws_df(m_religiosity)
+multi_country_effect <- as_vector(x[,5]) + 0.5*as_vector(x[,6])
+mono_country_effect <- as_vector(x[,5]) - 0.5*as_vector(x[,6])
+micro_summary(multi_country_effect, "multi-country effect of", "religiosity")
+micro_summary(mono_country_effect, "mono-country effect of", "religiosity")
 pred_table(m_religiosity, "religiosity")
 ```
 
@@ -105,6 +153,11 @@ pred_table(m_religiosity, "religiosity")
 
 ```{r echo=FALSE}
 fixef(m_ethfrac)
+x <- as_draws_df(m_ethfrac)
+multi_country_effect <- as_vector(x[,5]) + 0.5*as_vector(x[,6])
+mono_country_effect <- as_vector(x[,5]) - 0.5*as_vector(x[,6])
+micro_summary(multi_country_effect, "multi-country effect of", "ethfrac")
+micro_summary(mono_country_effect, "mono-country effect of", "ethfrac")
 pred_table(m_ethfrac, "ethfrac")
 ```
 
